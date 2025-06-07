@@ -1,6 +1,6 @@
 package br.com.alura.screenmatch.model;
 
-import br.com.alura.screenmatch.service.traducao.ConsultaMyMemory;
+import br.com.alura.screenmatch.service.traducao.ConsultaGemini;
 
 import java.util.OptionalDouble;
 
@@ -22,7 +22,8 @@ public class Serie {
         this.atoresDaSerie = dadosSerie.atoresDaSerie();
         this.poster = dadosSerie.poster();
         this.sinopse = dadosSerie.sinopse();
-        this.sinopse = ConsultaMyMemory.obterTraducao(dadosSerie.sinopse()).trim();
+        //this.sinopse = ConsultaMyMemory.obterTraducao(dadosSerie.sinopse()).trim();
+        this.sinopse = ConsultaGemini.obterTraducao(dadosSerie.sinopse()).text().trim();
     }
 
     public String getTitulo() {
@@ -89,17 +90,17 @@ public class Serie {
         this.sinopse = sinopse;
     }
 
-    @Override
-    public String toString() {
-        return "Serie{" +
-                "titulo='" + titulo + '\'' +
-                ", ano='" + ano + '\'' +
-                ", totalTemporadas=" + totalTemporadas +
-                ", avaliacao=" + avaliacao +
-                ", genero=" + genero +
-                ", atoresDaSerie='" + atoresDaSerie + '\'' +
-                ", poster='" + poster + '\'' +
-                ", sinopse='" + sinopse + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Serie{" +
+//                "titulo='" + titulo + '\'' +
+//                ", ano='" + ano + '\'' +
+//                ", totalTemporadas=" + totalTemporadas +
+//                ", avaliacao=" + avaliacao +
+//                ", genero=" + genero +
+//                ", atoresDaSerie='" + atoresDaSerie + '\'' +
+//                ", poster='" + poster + '\'' +
+//                ", sinopse='" + sinopse + '\'' +
+//                '}';
+//    }
 }
