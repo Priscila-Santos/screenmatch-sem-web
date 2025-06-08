@@ -1,18 +1,33 @@
 package br.com.alura.screenmatch.model;
 
 import br.com.alura.screenmatch.service.traducao.ConsultaGemini;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.OptionalDouble;
 
+@Entity
+@Table(name = "series")
 public class Serie {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true)
     private String titulo;
-    private String ano;
+    //private String ano;
     private Integer totalTemporadas;
     private Double avaliacao;
+
+    @Enumerated(EnumType.STRING)
     private Categoria genero;
     private String atoresDaSerie;
     private String poster;
     private String sinopse;
+
+    @Transient
+    private List<Episodio> episodios = new ArrayList<>();
 
     public Serie(DadosSerie dadosSerie) {
         this.titulo = dadosSerie.titulo();
@@ -22,8 +37,18 @@ public class Serie {
         this.atoresDaSerie = dadosSerie.atoresDaSerie();
         this.poster = dadosSerie.poster();
         this.sinopse = dadosSerie.sinopse();
-        //this.sinopse = ConsultaMyMemory.obterTraducao(dadosSerie.sinopse()).trim();
         this.sinopse = ConsultaGemini.obterTraducao(dadosSerie.sinopse()).text().trim();
+    }
+
+    public Serie() {}
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitulo() {
@@ -34,13 +59,13 @@ public class Serie {
         this.titulo = titulo;
     }
 
-    public String getAno() {
-        return ano;
-    }
-
-    public void setAno(String ano) {
-        this.ano = ano;
-    }
+//    public String getAno() {
+//        return ano;
+//    }
+//
+//    public void setAno(String ano) {
+//        this.ano = ano;
+//    }
 
     public Integer getTotalTemporadas() {
         return totalTemporadas;
@@ -90,17 +115,11 @@ public class Serie {
         this.sinopse = sinopse;
     }
 
-//    @Override
-//    public String toString() {
-//        return "Serie{" +
-//                "titulo='" + titulo + '\'' +
-//                ", ano='" + ano + '\'' +
-//                ", totalTemporadas=" + totalTemporadas +
-//                ", avaliacao=" + avaliacao +
-//                ", genero=" + genero +
-//                ", atoresDaSerie='" + atoresDaSerie + '\'' +
-//                ", poster='" + poster + '\'' +
-//                ", sinopse='" + sinopse + '\'' +
-//                '}';
-//    }
+    public List<Episodio> getEpisodios() {
+        return episodios;
+    }
+
+    public void setEpisodios(List<Episodio> episodios) {
+        this.episodios = episodios;
+    }
 }
