@@ -15,6 +15,7 @@ public class ListarSerieFormatter {
         System.out.println("📝  Sinopse: " + serie.getSinopse());
         //System.out.println("🖼️  Poster: " + serie.poster());
         System.out.println("📚  Temporadas: " + serie.getTotalTemporadas());
+        System.out.println("\uD83C\uDFA5  Episódios: " + serie.getEpisodios());
         System.out.println("***************************************************\n");
     }
 }
