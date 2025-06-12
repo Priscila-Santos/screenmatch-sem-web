@@ -1,16 +1,12 @@
 package br.com.alura.screenmatch.main;
 
-import br.com.alura.screenmatch.model.DadosSerie;
-import br.com.alura.screenmatch.model.DadosTemporada;
-import br.com.alura.screenmatch.model.Episodio;
-import br.com.alura.screenmatch.model.Serie;
+import br.com.alura.screenmatch.model.*;
 import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsumoAPI;
 import br.com.alura.screenmatch.service.ConverteDados;
 import br.com.alura.screenmatch.util.EpisodioFormatter;
 import br.com.alura.screenmatch.util.ListarSerieFormatter;
 import br.com.alura.screenmatch.util.SerieFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -41,6 +37,11 @@ public class Main {
                             1 - Buscar séries
                             2 - Buscar episódios
                             3 - Listar séries buscadas
+                            4 - Buscar serie por Titulo
+                            5 - Buscar series por Ator
+                            6 - Top 5 Melhores Series
+                            7 - Buscar series por categoria
+                            8 - Filtrar series por temporadas e avaliações
                             
                             0 - Sair
                             """;
@@ -59,6 +60,21 @@ public class Main {
                     break;
                 case 3:
                     listarSeriesBuscadas();
+                    break;
+                case 4:
+                    buscarSeriePorTitulo();
+                    break;
+                case 5:
+                    buscarSeriesPorAtor();
+                    break;
+                case 6:
+                    buscarTop5Series();
+                    break;
+                case 7:
+                    buscarSeriesPorCategoria();
+                    break;
+                case 8:
+                    filtrarSeriesPorTemporadaEAvaliacao();;
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -91,9 +107,10 @@ public class Main {
         listarSeriesBuscadas();
         System.out.println("Digite o nome da serie: ");
         var nomeSerie = leitura.nextLine();
-        Optional<Serie> serie = series.stream()
-                .filter(s -> s.getTitulo().toLowerCase().contains(nomeSerie.toLowerCase()))
-                .findFirst();
+        Optional<Serie> serie = serieRepository.findByTituloContainingIgnoreCase(nomeSerie);
+//                series.stream()
+//                .filter(s -> s.getTitulo().toLowerCase().contains(nomeSerie.toLowerCase()))
+//                .findFirst();
 
         if (serie.isPresent()) {
             var serieEncontrada = serie.get();
@@ -133,6 +150,63 @@ public class Main {
             for (Serie serie : series) {
                 ListarSerieFormatter.imprimirListaDeSeries(serie);
             }
+        }
+    }
+
+    private void buscarSeriePorTitulo() {
+        System.out.println("Eslha uma serie pelo nome: ");
+        String nomeSerie = leitura.nextLine();
+        Optional<Serie> serieBuscada = serieRepository.findByTituloContainingIgnoreCase(nomeSerie);
+
+        if (serieBuscada.isPresent()) {
+            System.out.println("Serie encontrado: " + serieBuscada.get());
+        } else {
+            System.out.println("Serie não encontrado :(");
+        }
+    }
+
+    private void buscarSeriesPorAtor() {
+        System.out.println("Digite o nome de um ator ou atriz para encontrar as series que ele(a) atuou: ");
+        var nomeAtor = leitura.nextLine();
+        List<Serie> seriesEncontradas = serieRepository.findByAtoresDaSerieContainingIgnoreCase(nomeAtor);
+
+        for (Serie serie : seriesEncontradas) {
+            ListarSerieFormatter.imprimirListaDeSeries(serie);
+        }
+    }
+
+
+    private void buscarTop5Series() {
+        List<Serie> seriesTop = serieRepository.findTop5ByOrderByAvaliacaoDesc();
+
+        for (Serie serie : seriesTop) {
+            ListarSerieFormatter.imprimirListaDeSeries(serie);
+        }
+    }
+
+    private void buscarSeriesPorCategoria() {
+        System.out.println("digite o gênero da serie: ");
+        var genero = leitura.nextLine();
+        Categoria categoria = Categoria.fromPortugues(genero);
+        List<Serie> generoDaSerie = serieRepository.findByGenero(categoria);
+
+        for (Serie serie : generoDaSerie) {
+            ListarSerieFormatter.imprimirListaDeSeries(serie);
+        }
+
+    }
+
+    private void filtrarSeriesPorTemporadaEAvaliacao() {
+        System.out.println("Filtrar series até qauntas temporadas? ");
+        var totalTemporadas = leitura.nextInt();
+        leitura.nextLine();
+        System.out.println("Quão bem avaliadas devem ser as series");
+        var avaliacao = leitura.nextDouble();
+        leitura.nextLine();
+        List<Serie> filtroSeries = serieRepository.findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(totalTemporadas, avaliacao);
+
+        for (Serie serie : filtroSeries) {
+            ListarSerieFormatter.imprimirListaDeSeries(serie);
         }
     }
 }

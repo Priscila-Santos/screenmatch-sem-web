@@ -124,4 +124,17 @@ public class Serie {
         episodios.forEach(e -> e.setSerie(this));
         this.episodios = episodios;
     }
+
+    @Override
+    public String toString() {
+        return "Serie{" +
+                ", titulo='" + titulo + '\'' +
+                ", totalTemporadas=" + totalTemporadas +
+                ", avaliacao=" + avaliacao +
+                ", genero=" + genero +
+                ", atoresDaSerie='" + atoresDaSerie + '\'' +
+                ", sinopse='" + sinopse + '\'' +
+                ", episodios=" + episodios +
+                '}';
+    }
 }
