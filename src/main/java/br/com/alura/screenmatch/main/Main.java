@@ -8,6 +8,7 @@ import br.com.alura.screenmatch.util.EpisodioFormatter;
 import br.com.alura.screenmatch.util.ListarEpidioFormatter;
 import br.com.alura.screenmatch.util.ListarSerieFormatter;
 import br.com.alura.screenmatch.util.SerieFormatter;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,8 +18,11 @@ public class Main {
     private Scanner leitura  = new Scanner(System.in);
     private ConsumoAPI consumoAPI = new ConsumoAPI();
     private ConverteDados conversor = new ConverteDados();
-    private final String ENDERECO = "https://www.omdbapi.com/?t=";
-    private final String API_KEY = "&apikey=c3cc4537";
+
+    Dotenv dotenv = Dotenv.load();
+    private final String ENDERECO = dotenv.get("API_URL_OMDB");
+    private final String API_KEY = dotenv.get("API_KEY_OMDB");
+
     List<DadosSerie> dadosSeries = new ArrayList<>();
 
     private SerieRepository serieRepository;
