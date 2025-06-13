@@ -47,6 +47,7 @@ public class Main {
                             8 - Filtrar series por temporadas e avaliações
                             9 - Buscar por trecho do episodio
                             10 - Top 5 Melhores Episodios de uma Series
+                            11 - Buscar episódios a partir de uma data
                             
                             0 - Sair
                             """;
@@ -85,6 +86,8 @@ public class Main {
                     buscarEpisodioPorTrecho();
                 case 10:
                     topEpisodiosPorSerie();
+                case 11:
+                    buscarEpisodiosPorAno();
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -241,6 +244,23 @@ public class Main {
             }
         }
     }
+
+
+    private void buscarEpisodiosPorAno() {
+        buscarSeriePorTitulo();
+        if (serieBuscada.isPresent()) {
+            Serie serie = serieBuscada.get();
+            System.out.println("Digite o ano limite de lançamento");
+            var anoLancamento = leitura.nextInt();
+            leitura.nextLine();
+            List<Episodio> episodiosPorAno = serieRepository.buscarEpisodioPorAno(serie, anoLancamento);
+
+            for (Episodio episodio : episodiosPorAno) {
+                ListarEpidioFormatter.imprimirEpisodio(episodio);
+            }
+        }
+    }
+
 
 }
 
