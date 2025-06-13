@@ -88,10 +88,13 @@ public class Main {
                     break;
                 case 9:
                     buscarEpisodioPorTrecho();
+                    break;
                 case 10:
                     topEpisodiosPorSerie();
+                    break;
                 case 11:
                     buscarEpisodiosPorAno();
+                    break;
                 case 0:
                     System.out.println("Saindo...");
                     break;
