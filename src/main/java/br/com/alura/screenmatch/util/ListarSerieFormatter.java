@@ -1,9 +1,6 @@
 package br.com.alura.screenmatch.util;
 
-import br.com.alura.screenmatch.model.DadosSerie;
 import br.com.alura.screenmatch.model.Serie;
-
-import java.util.List;
 
 public class ListarSerieFormatter {
     public static void imprimirListaDeSeries(Serie serie) {

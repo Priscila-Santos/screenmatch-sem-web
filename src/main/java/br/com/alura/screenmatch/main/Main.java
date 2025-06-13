@@ -5,6 +5,7 @@ import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.ConsumoAPI;
 import br.com.alura.screenmatch.service.ConverteDados;
 import br.com.alura.screenmatch.util.EpisodioFormatter;
+import br.com.alura.screenmatch.util.ListarEpidioFormatter;
 import br.com.alura.screenmatch.util.ListarSerieFormatter;
 import br.com.alura.screenmatch.util.SerieFormatter;
 
@@ -22,6 +23,8 @@ public class Main {
 
     private SerieRepository serieRepository;
     private List<Serie> series = new ArrayList<>();
+
+    private Optional<Serie> serieBuscada;
 
 
     public Main(SerieRepository serieRepository) {
@@ -42,6 +45,8 @@ public class Main {
                             6 - Top 5 Melhores Series
                             7 - Buscar series por categoria
                             8 - Filtrar series por temporadas e avaliações
+                            9 - Buscar por trecho do episodio
+                            10 - Top 5 Melhores Episodios de uma Series
                             
                             0 - Sair
                             """;
@@ -76,6 +81,10 @@ public class Main {
                 case 8:
                     filtrarSeriesPorTemporadaEAvaliacao();;
                     break;
+                case 9:
+                    buscarEpisodioPorTrecho();
+                case 10:
+                    topEpisodiosPorSerie();
                 case 0:
                     System.out.println("Saindo...");
                     break;
@@ -156,7 +165,7 @@ public class Main {
     private void buscarSeriePorTitulo() {
         System.out.println("Eslha uma serie pelo nome: ");
         String nomeSerie = leitura.nextLine();
-        Optional<Serie> serieBuscada = serieRepository.findByTituloContainingIgnoreCase(nomeSerie);
+        serieBuscada = serieRepository.findByTituloContainingIgnoreCase(nomeSerie);
 
         if (serieBuscada.isPresent()) {
             System.out.println("Serie encontrado: " + serieBuscada.get());
@@ -203,12 +212,36 @@ public class Main {
         System.out.println("Quão bem avaliadas devem ser as series");
         var avaliacao = leitura.nextDouble();
         leitura.nextLine();
-        List<Serie> filtroSeries = serieRepository.findByTotalTemporadasLessThanEqualAndAvaliacaoGreaterThanEqual(totalTemporadas, avaliacao);
+        List<Serie> filtroSeries = serieRepository.seriePorTemporadaEAvaliacao(totalTemporadas, avaliacao);
 
         for (Serie serie : filtroSeries) {
             ListarSerieFormatter.imprimirListaDeSeries(serie);
         }
     }
+
+    private void buscarEpisodioPorTrecho() {
+        System.out.println("Digite o nome do trecho para buscar episodio: ");
+        var trechoEpisodio = leitura.nextLine();
+        List<Episodio> episodiosEncontrados = serieRepository.epsosiosPorTrecho(trechoEpisodio);
+
+        //episodiosEncontrados.forEach(System.out::println);
+        for (Episodio episodio : episodiosEncontrados) {
+            ListarEpidioFormatter.imprimirEpisodio(episodio);
+        }
+    }
+
+    private void topEpisodiosPorSerie() {
+        buscarSeriePorTitulo();
+        if (serieBuscada.isPresent()) {
+            Serie serie = serieBuscada.get();
+            List<Episodio>  listarTopEpisodios = serieRepository.topEpisodiosPorSerie(serie);
+
+            for (Episodio episodio : listarTopEpisodios) {
+                ListarEpidioFormatter.imprimirEpisodio(episodio);
+            }
+        }
+    }
+
 }
 
 
