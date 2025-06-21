@@ -16,7 +16,6 @@ public class Serie {
 
     @Column(unique = true)
     private String titulo;
-    //private String ano;
     private Integer totalTemporadas;
     private Double avaliacao;
 
